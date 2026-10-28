@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;700&family=Inter:wght@700&display=swap" rel="stylesheet">
+    <title>Employee Login</title>
+    <style>
+            body {
+            margin: 0;
+            font-family: Arial, sans-serif;
+            display: flex;
+            height: 100vh;
+            background-color: #f4f8fc;
+        }
+        .left-section {
+            background-color: #d9f0f7;
+            width: 20%;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            align-items: flex-start;
+            padding: 20px;
+        }
+        .left-section img {
+            height: 80px;
+        }
+        .right-section {
+            flex: 1;
+            padding: 50px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background-color: #ffffff;
+        }
+        .right-section h2 {
+            font-size: 24px;
+            color: #2f4c74;
+            margin-bottom: 30px;
+        }
+        .form-group {
+            width: 100%;
+            max-width: 400px;
+            margin-bottom: 20px;
+            position: relative;
+        }
+        .form-group input {
+            width: 100%;
+            padding: 10px;
+            padding-right: 40px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .form-group input:focus {
+            border-color: #2f4c74;
+            outline: none;
+        }
+        .form-group .icon {
+            position: absolute;
+            right: -45px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            height: 20px;
+            width: 20px;
+            
+        }
+        .submit-btn {
+            width: 121.6%;
+            padding: 10px;
+            font-size: 16px;
+            color: #ffffff;
+            background-color: #ff6600;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+                    margin-top: 30px;
+        }
+        .submit-btn:hover {
+            background-color: #e65c00;
+        }
+        .home-link {
+            font-size: 14px;
+            color: #2f4c74;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            margin-left: 50px;
+        }
+        .home-link:hover {
+            text-decoration: underline;
+        }
+
+       .forgot-link {
+            font-size: 14px;
+            color: #2f4c74;
+            text-decoration: none;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-top: 20px;
+            margin-left: 50px;
+}
+
+       .forgot-link:hover {
+           text-decoration: underline;
+}
+
+
+    </style>
+
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-app-compat.js"></script>  
+
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-auth-compat.js"></script>  
+    <script src="https://www.gstatic.com/firebasejs/9.6.1/firebase-firestore-compat.js"></script>  
+
+    <script>
+
+          
+        const firebaseConfig = {
+            apiKey: "AIzaSyCr4xHfF4Rw1TG4v-DcLziKG9qPv-3KnM0",           
+            authDomain: "aban-267d1.firebaseapp.com",       
+            projectId: "aban-267d1",       
+            storageBucket: "aban-267d1.appspot.com",       
+            messagingSenderId: "1018335716279",            
+            appId: "1:1018335716279:web:5c8e8948b51a79c8febe32"    
+   
+          };
+
+        firebase.initializeApp(firebaseConfig);    
+        const auth = firebase.auth();      
+        const db = firebase.firestore(); 
+
+        document.addEventListener("DOMContentLoaded", function() {  
+
+            const loginForm = document.getElementById("loginForm"); 
+            if (loginForm) {  
+                loginForm.addEventListener("submit", function(event) {  
+                    event.preventDefault();  
+
+
+                    const employeeId = parseInt(document.getElementById("employeeId").value);  
+                    const password = document.getElementById("password").value;  
+                    const errorMessage = document.getElementById("error-message"); 
+
+                    if (isNaN(employeeId)) {          
+           errorMessage.textContent = "Employee ID must be a number.";   
+                        return;            
+
+
+                    }
+
+    db.collection("employees").where("employeeId", "==", employeeId)
+
+                        .get() 
+
+                        .then((querySnapshot) => {      
+                            if (!querySnapshot.empty) {  
+         const employeeData = querySnapshot.docs[0].data();  
+          const email = employeeData.email; 
+          const isFirstLogin = employeeData.isFirstLogin;   
+
+          const role = employeeData.role; 
+
+     localStorage.setItem("role", role); 
+
+                                return auth.signInWithEmailAndPassword(email, password)  
+                                    .then(() => {
+                                        if (isFirstLogin) {
+                                            window.location.href = "authpasschange.html"; // First-time login
+                                        } else {
+                                            window.location.href = "mainn.html"; // Regular login
+                                        }
+                                    });
+                            } else {
+                                throw new Error("Employee ID not found.");
+                            }
+                        })
+                        .catch((error) => {
+                            errorMessage.textContent = `Error: ${error.message}`;
+                        });
+                });
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="left-section">
+        <img src="Aban logo.png" alt="Aban Logo">
+    </div>
+    <div class="right-section">
+        <h2>Enter Your Credentials</h2>
+        <form id="loginForm">
+            <div class="form-group">
+                <input type="text" id="employeeId" placeholder="Employee ID" required>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" placeholder="Password" required>
+                <img src="eye-open.png" alt="Show Password" class="icon"
+onclick="togglePassword('password', this)">
+            </div>
+            <button type="submit" class="submit-btn">Log In</button>
+            <div id="error-message" style="color: red;"></div>
+            <div class="links">
+                <a href="authpasschange.html" class="forgot-link">Forgot Your Password?</a>
+                <a href="firstp.html" class="home-link">Go to Home Page</a>
+            </div>
+        </form>
+    </div>
+<script>
+         
+        function togglePassword(fieldId, icon) {
+            const field = document.getElementById(fieldId);
+            if (field.type === "password") {
+                field.type = "text";
+                icon.src = "eye-close.png"; 
+            } else {
+                field.type = "password";
+                icon.src = "eye-open.png"; 
+            }
+        }
+
+</script>
+
+
+
+
+</body>
+</html>
