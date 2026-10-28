@@ -549,7 +549,7 @@ margin-top: -10px;
         if (confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')) {
             firebase.auth().signOut().then(function() {
                 alert('تم تسجيل الخروج بنجاح');
-                window.location.replace('firstp.html');
+                window.location.replace('index.html');
             }).catch(function(error) {
                 alert('حدث خطأ أثناء محاولة تسجيل الخروج');
             });
