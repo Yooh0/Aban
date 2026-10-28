@@ -576,17 +576,7 @@ window.addEventListener("pageshow", function () {
         }
     });
 
-    // Prevent going back to the application after logout
-    window.onload = function() {
-        firebase.auth().onAuthStateChanged(function(user) {
-            if (!user) {
-                history.pushState(null, null, window.location.href);
-                window.onpopstate = function () {
-                    history.go(1);
-                };
-            }
-        });
-    };
+  
 
 </script>
 
