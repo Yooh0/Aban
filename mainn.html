@@ -531,9 +531,12 @@ margin-top: -10px;
     }
 
    const role = localStorage.getItem("role");
-  if (role === "admin") {
-      document.getElementById("adminControls").style.display = "block";
-  }
+
+const adminControls = document.getElementById("adminControls");
+
+if (role === "admin" && adminControls) {
+    adminControls.style.display = "block";
+}
 
   const employeeLink = document.getElementById("employeeRecordsLink");
   if (role === "admin" && employeeLink) {
