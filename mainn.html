@@ -539,48 +539,7 @@ margin-top: -10px;
   if (role === "admin" && employeeLink) {
       employeeLink.style.display = "block";
   }
-
-    // Hide the page until authentication is verified
-document.documentElement.style.visibility = "hidden";
-
-firebase.auth().onAuthStateChanged(function (user) {
-    if (!user) {
-        window.location.replace("auth.html");
-    } else {
-        document.documentElement.style.visibility = "visible";
-    }
-});
-
-window.addEventListener("pagehide", function () {
-    document.documentElement.style.visibility = "hidden";
-});
-
-window.addEventListener("pageshow", function () {
-    if (!firebase.auth().currentUser) {
-        window.location.replace("auth.html");
-    }
-});
-
-
-
-    // Logout button functionality
-    document.getElementById('logout').addEventListener('click', function(event) {
-        event.preventDefault();
-        if (confirm('هل أنت متأكد أنك تريد تسجيل الخروج؟')) {
-            firebase.auth().signOut().then(function() {
-                alert('تم تسجيل الخروج بنجاح');
-                window.location.replace('index.html');
-            }).catch(function(error) {
-                alert('حدث خطأ أثناء محاولة تسجيل الخروج');
-            });
-        }
-    });
-
-  
-
-</script>
-
-
+ 
 
 <script>
     // Redirect if not logged in
