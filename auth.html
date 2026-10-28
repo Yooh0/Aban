@@ -136,20 +136,7 @@
         firebase.initializeApp(firebaseConfig);    
         const auth = firebase.auth();     
 
-// End the session when the user returns to Login using browser history
-window.addEventListener("pageshow", async function () {
-    const navigation = performance.getEntriesByType("navigation")[0];
 
-    if (navigation && navigation.type === "back_forward") {
-        try {
-            await auth.signOut();
-            sessionStorage.removeItem("role");
-            localStorage.removeItem("role");
-        } catch (error) {
-            console.error("Sign-out failed:", error);
-        }
-    }
-});
         
         const db = firebase.firestore(); 
 
